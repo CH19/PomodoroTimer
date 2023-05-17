@@ -8,6 +8,9 @@ const bAdd = document.getElementById('bAdd');
 const itTask = document.getElementById('itTask');
 const form = document.getElementById('form');
 const taskContainer = document.getElementById('taskContainer');
+// const taskName = document.querySelector('#time #taskName');
+
+
 form.addEventListener('submit', e => {
           e.preventDefault();
           if(itTask.value != ''){
@@ -22,7 +25,6 @@ form.addEventListener('submit', e => {
 
 // creacion del objeto tarea para nosotros
 function createTask(value){
-          console.log('sdfsdfsdf');
           const newTask = {
                     id: (Math.random() * 100).toString(36).slice(3),
                     title: value,
@@ -42,7 +44,6 @@ const renderTask = (task) => { //se cambio esto a una funcion archer puesto que 
                     const doneTask = document.createElement('span');
                     const clases = ['task', 'complete', 'title','start-button', 'done'];
                     const containers = [divMain, div1, div2, startTask, doneTask];
-                    console.log(containers);
                     for(let i = 0; i < clases.length; i++){
                               containers[i].classList.add(clases[i]);
                     }
@@ -54,26 +55,50 @@ const renderTask = (task) => { //se cambio esto a una funcion archer puesto que 
                     divMain.appendChild(div1);
                       divMain.appendChild(div2);
        taskContainer.appendChild(divMain);
-       console.log(tasks);
+    //    console.log(tasks);
        const starButtons = document.querySelectorAll('.start-button');
-       
+       console.log(starButtons);
        //Interaccion de los botones star con las tareas
        starButtons.forEach(button => {
         button.addEventListener('click', (e)=> {
+         console.log('funciona tambien sfdsdf')
             if(!timer){
-                const id = button.getAttribute('data-id')
+                console.log('funciona');
+                const id = button.getAttribute('id');
                 starButtonsHandler(id);
-                button.textContent = 'In progres...'
+                button.textContent = 'In progres...';
+            
             }
-        })
-       })
-}
+        });
+       });
+};
 // funcion usada cerca de la linea 65
-function starButtonsHandler(value){
+function starButtonsHandler(id){
+    console.log('funciono tambien');
     time = 25 * 60; //agregamos el tiempo total 25 minutos x 60 segundos
     current = id; //se agarra el id de la tarea actual
-    const taskIndex = tasks.findIndex(task => task.id == id); //se esta encontrando el ID, el metodo findIndex da el index del primer elemento que cumple la condicion
-    const taskName = document.querySelector('#time #taskName');
-    taskName.textContent = tasks[taskIndex].title;
+    const taskIndex = tasks.findIndex((task) => task.id == id); //se esta encontrando el ID, el metodo findIndex da el index del primer elemento que cumple la condicion
+    document.querySelector("#time #taskName").textContent = tasks[taskIndex].title;
+    time = setInterval(() => {//funcion para que el codigo de reduccion del tiempo se reduzca muchooo
+        timeHandler();//funcion para que el tiempo se reste
+    }, 1000)
 
+}
+function timeHandler(){
+    time--;
+    renderTime();
+
+    if(time == 0){
+        clearInterval(timer);
+        current = null;
+        taskName.textContent = '';
+        renderTime();
+    }
+}
+function renderTime(){
+    const timeDiv = document.querySelector('#time #value');
+    const minutos = parseInt(time / 60);
+    const seconds = parseFloat(time % 60);
+
+    timeDiv.textContent = `${minutos < 10 ? '0': ''}${minutos}:${seconds < 10 ? '0': ''}${seconds}`
 }
