@@ -8,7 +8,10 @@ const bAdd = document.getElementById('bAdd');
 const itTask = document.getElementById('itTask');
 const form = document.getElementById('form');
 const taskContainer = document.getElementById('taskContainer');
+const taskName = document.getElementById('taskname')
+
 // const taskName = document.querySelector('#time #taskName');
+renderTime();
 
 
 form.addEventListener('submit', e => {
@@ -28,7 +31,7 @@ function createTask(value){
           const newTask = {
                     id: (Math.random() * 100).toString(36).slice(3),
                     title: value,
-                    completed: false
+                    completed: false,
           };
           tasks.unshift(newTask);
           renderTask(newTask)
@@ -38,28 +41,33 @@ function createTask(value){
 //Funcion para agregar el contenido a la lista del pomodoro
 const renderTask = (task) => { //se cambio esto a una funcion archer puesto que no estamos usando inner hacer un metodo como el forEach o el Map es peligroso a la hora de impactar en todo el codigo de creacion de tareas. Se dejo un arreglo con todas las tareas en caso de que se quera acceder mas adelante
          const divMain = document.createElement('div'); 
-          const  div1 = document.createElement('div');
+         divMain.classList.add('d-flex')
+         const  div1 = document.createElement('div');
                     const div2 = document.createElement('div');
-                    const startTask = document.createElement('button');
+                    let startTask = document.createElement('button');
                     const doneTask = document.createElement('span');
                     const clases = ['task', 'complete', 'title','start-button', 'done'];
                     const containers = [divMain, div1, div2, startTask, doneTask];
                     for(let i = 0; i < clases.length; i++){
                               containers[i].classList.add(clases[i]);
                     }
-                    doneTask.textContent = 'done';
+                    doneTask.textContent = 'DONE!!!';
                     startTask.setAttribute('id', `${task.id}`)
                     startTask.textContent = 'start task';
-                    task.completed ? div1.appendChild(doneTask) : div1.appendChild(startTask);
+                    div1.appendChild(doneTask); 
+                    doneTask.classList.add('d-none');
+                    div1.appendChild(startTask);
                     div2.textContent = task.title;
+                    divMain.appendChild(div2);
                     divMain.appendChild(div1);
-                      divMain.appendChild(div2);
        taskContainer.appendChild(divMain);
     //    console.log(tasks);
        const starButtons = document.querySelectorAll('.start-button');
        console.log(starButtons);
        //Interaccion de los botones star con las tareas
        starButtons.forEach(button => {
+        button.classList.add('btn');
+        button.classList.add('btn-danger')
         button.addEventListener('click', (e)=> {
          console.log('funciona tambien sfdsdf')
             if(!timer){
@@ -67,32 +75,48 @@ const renderTask = (task) => { //se cambio esto a una funcion archer puesto que 
                 const id = button.getAttribute('id');
                 starButtonsHandler(id);
                 button.textContent = 'In progres...';
-            
             }
         });
        });
 };
 // funcion usada cerca de la linea 65
-function starButtonsHandler(id){
+function starButtonsHandler(identificator){
+
     console.log('funciono tambien');
-    time = 25 * 60; //agregamos el tiempo total 25 minutos x 60 segundos
-    current = id; //se agarra el id de la tarea actual
-    const taskIndex = tasks.findIndex((task) => task.id == id); //se esta encontrando el ID, el metodo findIndex da el index del primer elemento que cumple la condicion
-    document.querySelector("#time #taskName").textContent = tasks[taskIndex].title;
-    time = setInterval(() => {//funcion para que el codigo de reduccion del tiempo se reduzca muchooo
-        timeHandler();//funcion para que el tiempo se reste
+    time = 5 ; //agregamos el tiempo total 25 minutos x 60 segundos
+    current = identificator; //se agarra el identificator de la tarea actual
+    const taskIndex = tasks.findIndex((task) => task.id == identificator); //se esta encontrando el ID, el metodo findIndex da el index del primer elemento que cumple la condicion
+    console.log(document.getElementById('taskname'));
+    document.querySelector("#taskname").textContent = `${tasks[taskIndex].title}`;
+    timer = setInterval(() => {//funcion para que el codigo de reduccion del tiempo se reduzca muchooo
+        timeHandler(tasks[taskIndex], identificator);     
+
+    //      if(tasks[findIndex].completed){ 
+    //         div1.appendChild(done);
+    //         startB.parentNode.removeChild(this);
+    //     }else{ 
+    //      div1.appendChild(startB);
+        
+    //  } //funcion para que el tiempo se reste
     }, 1000)
 
 }
-function timeHandler(){
+function timeHandler(task, ID){
     time--;
     renderTime();
 
     if(time == 0){
         clearInterval(timer);
         current = null;
-        taskName.textContent = '';
+        task.title.textContent = '';
+        task.completed = true;
+        timer = null;
+        const bActual = document.getElementById(`${ID}`);
+        bActual.textContent = 'Done!!!!'
+        
+
         renderTime();
+        startBreak();
     }
 }
 function renderTime(){
@@ -100,5 +124,28 @@ function renderTime(){
     const minutos = parseInt(time / 60);
     const seconds = parseFloat(time % 60);
 
-    timeDiv.textContent = `${minutos < 10 ? '0': ''}${minutos}:${seconds < 10 ? '0': ''}${seconds}`
+    timeDiv.textContent = `${mostrarTime(minutos)}:${mostrarTime(seconds)}`
+}
+function mostrarTime(time){
+    return `${Number(time) < 10 ? `0${time}` : `${time}`}`
+}
+function startBreak(){
+    time = 3;
+    taskName.textContent = 'Break';
+    timerBreak = setInterval(()=>{
+        timeBreakHandler();
+    }, 1000)
+}
+function timeBreakHandler(task){
+    time--;
+    renderTime();
+
+    if(time == 0){
+        clearInterval(timerBreak);
+        current = null;
+        task.title.textContent = '';
+        timerBreak = null;
+    
+        renderTime();
+    }
 }
