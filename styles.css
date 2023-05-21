@@ -1,22 +1,54 @@
 *{
     color: #fff;
 }
-body{
+.body{
     width: 100%;
-    height: 100%;
-}
+    height: 100vh;
+    position: relative;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: space-around;
+}   
 main{
     display: flex;
     justify-content: center;
     flex-direction: column;
 }
 #value{
-    font-size: 8rem;
+    font-size: 6rem;
     display: flex;
     justify-content: center;
 }
 #taskname{
     display: flex;
-    font-size: 4rem;
+    font-size: 3rem;
     justify-content: center;
+}
+
+svg{
+    width: 20px;
+    height: 20px;
+}
+.publi{
+    /* background: linear-gradient(to right, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D); */
+    display: flex;
+    justify-content: space-between;
+    width: 100px;
+    align-items: center;
+}
+.Ig-button{
+    background: linear-gradient(to right, #FED52F, #F39725, #F41268, #CA1CBD, #7643F6);
+}
+.Ig-button > span, .github-button > span{
+    font-size: 1rem;
+}
+.github-button{
+    background: linear-gradient(to right,	#2b3137, 	#fafbfc);
+}
+footer{
+    display: flex;
+    align-items: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    justify-content: space-evenly;
 }

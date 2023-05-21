@@ -19,10 +19,7 @@ form.addEventListener('submit', e => {
           if(itTask.value != ''){
           createTask(itTask.value);
           itTask.value = '';
-          // if(taskContainer.childNodes.values){
-          //                         taskContainer.removeChild(divSuperMain);
-          // }
-          // renderTask();
+
   }
 })
 
@@ -52,6 +49,8 @@ const renderTask = (task) => { //se cambio esto a una funcion archer puesto que 
                               containers[i].classList.add(clases[i]);
                     }
                     doneTask.textContent = 'DONE!!!';
+                    div1.classList.add('m-2');
+                    startTask.classList.add('m-2')
                     startTask.setAttribute('id', `${task.id}`)
                     startTask.textContent = 'start task';
                     div1.appendChild(doneTask); 
@@ -79,28 +78,22 @@ const renderTask = (task) => { //se cambio esto a una funcion archer puesto que 
         });
        });
 };
-// funcion usada cerca de la linea 65
+
 function starButtonsHandler(identificator){
 
     console.log('funciono tambien');
-    time = 5 ; //agregamos el tiempo total 25 minutos x 60 segundos
+    time = 25 * 60 ; //agregamos el tiempo total 25 minutos x 60 segundos
     current = identificator; //se agarra el identificator de la tarea actual
     const taskIndex = tasks.findIndex((task) => task.id == identificator); //se esta encontrando el ID, el metodo findIndex da el index del primer elemento que cumple la condicion
     console.log(document.getElementById('taskname'));
     document.querySelector("#taskname").textContent = `${tasks[taskIndex].title}`;
+   
+   
     timer = setInterval(() => {//funcion para que el codigo de reduccion del tiempo se reduzca muchooo
         timeHandler(tasks[taskIndex], identificator);     
-
-    //      if(tasks[findIndex].completed){ 
-    //         div1.appendChild(done);
-    //         startB.parentNode.removeChild(this);
-    //     }else{ 
-    //      div1.appendChild(startB);
-        
-    //  } //funcion para que el tiempo se reste
     }, 1000)
-
 }
+
 function timeHandler(task, ID){
     time--;
     renderTime();
@@ -119,6 +112,7 @@ function timeHandler(task, ID){
         startBreak();
     }
 }
+
 function renderTime(){
     const timeDiv = document.querySelector('#time #value');
     const minutos = parseInt(time / 60);
@@ -126,16 +120,19 @@ function renderTime(){
 
     timeDiv.textContent = `${mostrarTime(minutos)}:${mostrarTime(seconds)}`
 }
+
 function mostrarTime(time){
     return `${Number(time) < 10 ? `0${time}` : `${time}`}`
 }
+
 function startBreak(){
-    time = 3;
+    time = 5 * 60;
     taskName.textContent = 'Break';
     timerBreak = setInterval(()=>{
         timeBreakHandler();
     }, 1000)
 }
+
 function timeBreakHandler(task){
     time--;
     renderTime();
